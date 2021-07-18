@@ -1,0 +1,15 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Num {
+  value: Float!
+}
+
+type Query {
+  numbers: [Num!]!
+}
+
+type Mutation {
+  addNumbers: [Num!]!
+}
