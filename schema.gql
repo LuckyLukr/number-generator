@@ -8,10 +8,10 @@ type Num {
 
 type Query {
   numbers: [Num!]!
+  sortByHighest: [Num!]!
+  sortByLowest: [Num!]!
 }
 
 type Mutation {
   addNumbers: [Num!]!
-  sortByHighest: [Num!]!
-  sortByLowest: [Num!]!
 }

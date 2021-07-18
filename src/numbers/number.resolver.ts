@@ -16,12 +16,12 @@ export class NumberResolver {
     return await this.numberService.addNumbers();
   }
 
-  @Mutation(returns => [Num])
+  @Query(returns => [Num])
   async sortByHighest(): Promise<Num[]> {
     return await this.numberService.sortByHighest();
   }
 
-  @Mutation(returns => [Num])
+  @Query(returns => [Num])
   async sortByLowest(): Promise<Num[]> {
     return await this.numberService.sortByLowest();
   }
