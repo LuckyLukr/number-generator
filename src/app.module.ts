@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { NumberModule } from './numbers/number.module';
 import { Num } from './numbers/number.entity';
 import { NumberResolver } from './numbers/number.resolver';
@@ -25,7 +23,7 @@ import { NumberResolver } from './numbers/number.resolver';
       autoSchemaFile: 'schema.gql',
     }),
   ],
-  controllers: [AppController],
-  providers: [AppService, NumberResolver],
+  controllers: [],
+  providers: [NumberResolver],
 })
 export class AppModule {}

@@ -2,16 +2,10 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Num {
-  value: Float!
-}
-
 type Query {
-  numbers: [Num!]!
-  sortByHighest: [Num!]!
-  sortByLowest: [Num!]!
+  sortNumbers(sort: String!): [Float!]!
 }
 
 type Mutation {
-  addNumbers: [Num!]!
+  addNumbers: [Float!]!
 }

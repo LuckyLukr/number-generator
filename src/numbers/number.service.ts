@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, ForbiddenException } from "@nestjs/common";
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Num } from './number.entity';
@@ -11,34 +11,41 @@ export class NumberService {
       ) {}
 
     async generateNumber() {
-        const newNumber = {value: Math.floor(Math.random() * 10_000)}
-        const numbers = await this.numbersRepository.find();
-        await this.numbersRepository.save(newNumber);
-        return numbers
+        const newNumber = await this.numbersRepository.save({value: Math.floor(Math.random() * 10_000)});
+        return `number ${newNumber.value} added!`;
     }
 
     async addNumbers() {
-        const newNumbers = [{value: 1},{value: 2},{value: 3},{value: 4},{value: 5}];
         const existingNumbers = await this.numbersRepository.find();
-        newNumbers.forEach(e => {
-            existingNumbers.forEach( i => {
-                if (e.value === i.value){
-                    e.value = Math.floor(Math.random() * 10_000);
-                }
-            })
-        })
+
+        function generateUniqueNumber(existingNumbers:Num[]) {
+            const newNumber = Math.floor(Math.random() * 10000);
+          if (existingNumbers.find((e:Num) => e.value === newNumber)) {
+              return generateUniqueNumber(existingNumbers);
+          }
+          return newNumber;
+        }
+
+        const newNumbers = [
+            {value: generateUniqueNumber(existingNumbers)}, 
+            {value: generateUniqueNumber(existingNumbers)},
+            {value: generateUniqueNumber(existingNumbers)}
+        ];
+
         await this.numbersRepository.insert(newNumbers);
-        return existingNumbers;
+        return newNumbers.map((e:Num) => e.value);
     }
 
-    async sortByHighest() {
+    async sortNumbers(condition:string) {
         const numbers = await this.numbersRepository.find();
-        return numbers.sort((a, b) => b.value - a.value);
-    }
-
-    async sortByLowest() {
-        const numbers = await this.numbersRepository.find();
-        return numbers.sort((a, b) => a.value - b.value);
+        const floats = numbers.map((e:Num) => e.value)
+        if (condition === '<') {
+            return floats.sort((a, b) => a - b);
+        } else if (condition === '>') {
+            return floats.sort((a, b) => b - a);
+        } else {
+            return
+        }
     }
 
     async deleteNumbers() {

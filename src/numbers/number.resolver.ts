@@ -1,4 +1,4 @@
-import { Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Num } from './number.entity';
 import { NumberService } from './number.service';
 
@@ -6,23 +6,13 @@ import { NumberService } from './number.service';
 export class NumberResolver {
   constructor(private readonly numberService: NumberService) {}
 
-  @Query(returns => [Num])
-  async numbers(): Promise<Num[]>{
-      return await this.numberService.generateNumber();
-  }
-
-  @Mutation(returns => [Num])
-  async addNumbers(): Promise<Num[]> {
+  @Mutation(returns => [Number])
+  async addNumbers():Promise<number[]> {
     return await this.numberService.addNumbers();
   }
 
-  @Query(returns => [Num])
-  async sortByHighest(): Promise<Num[]> {
-    return await this.numberService.sortByHighest();
-  }
-
-  @Query(returns => [Num])
-  async sortByLowest(): Promise<Num[]> {
-    return await this.numberService.sortByLowest();
+  @Query(returns => [Number])
+  async sortNumbers(@Args('sort') condition: string): Promise<number[]> {
+    return await this.numberService.sortNumbers(condition);
   }
 }
