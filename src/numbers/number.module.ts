@@ -8,7 +8,10 @@ import { NumberResolver } from "./number.resolver";
 @Module({
     imports: [TypeOrmModule.forFeature([Num])],
     controllers: [NumberController],
-    providers: [NumberService, NumberResolver],
+    providers: [
+        NumberService, 
+        NumberResolver,
+    ],
     exports: [NumberService]
 })
 export class NumberModule {}

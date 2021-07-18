@@ -1,24 +1,37 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from './../src/app.module';
+import { NumberService } from '../src/numbers/number.service';
+import { NumberModule } from '../src/numbers/number.module';
+import { Num } from '../src/numbers/number.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { NumberController } from '../src/numbers/number.controller';
 
-describe('AppController (e2e)', () => {
+describe('NumberController (e2e)', () => {
   let app: INestApplication;
+  let numberService = { generateNumber: () => [Num]};
 
-  beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
+  beforeAll(async () => {
+    const moduleRef = await Test.createTestingModule({
+      imports: [
+        NumberModule,
+        TypeOrmModule.forFeature([Num])
+      ]
+    })
+      .overrideProvider(NumberService)
+      .useValue(NumberService)
+      .compile();
 
-    app = moduleFixture.createNestApplication();
+    app = moduleRef.createNestApplication();
     await app.init();
   });
 
-  it('/ (GET)', () => {
+  it(`/GET numbers`, () => {
     return request(app.getHttpServer())
-      .get('/')
+      .get('/numbers')
       .expect(200)
-      .expect('Hello World!');
+      .expect({
+        data: numberService.generateNumber(),
+      });
   });
 });

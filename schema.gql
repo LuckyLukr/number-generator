@@ -12,4 +12,6 @@ type Query {
 
 type Mutation {
   addNumbers: [Num!]!
+  sortByHighest: [Num!]!
+  sortByLowest: [Num!]!
 }

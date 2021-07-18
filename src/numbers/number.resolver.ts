@@ -13,7 +13,16 @@ export class NumberResolver {
 
   @Mutation(returns => [Num])
   async addNumbers(): Promise<Num[]> {
-    const numbers = await this.numberService.addNumbers();
-    return numbers;
+    return await this.numberService.addNumbers();
+  }
+
+  @Mutation(returns => [Num])
+  async sortByHighest(): Promise<Num[]> {
+    return await this.numberService.sortByHighest();
+  }
+
+  @Mutation(returns => [Num])
+  async sortByLowest(): Promise<Num[]> {
+    return await this.numberService.sortByLowest();
   }
 }

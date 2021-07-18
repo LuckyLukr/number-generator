@@ -31,6 +31,16 @@ export class NumberService {
         return existingNumbers;
     }
 
+    async sortByHighest() {
+        const numbers = await this.numbersRepository.find();
+        return numbers.sort((a, b) => b.value - a.value);
+    }
+
+    async sortByLowest() {
+        const numbers = await this.numbersRepository.find();
+        return numbers.sort((a, b) => a.value - b.value);
+    }
+
     async deleteNumbers() {
         await this.numbersRepository.clear();
     }
