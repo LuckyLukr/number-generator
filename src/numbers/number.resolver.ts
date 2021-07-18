@@ -7,8 +7,8 @@ export class NumberResolver {
   constructor(private readonly numberService: NumberService) {}
 
   @Mutation(returns => [Number])
-  async addNumbers():Promise<number[]> {
-    return await this.numberService.addNumbers();
+  async addNumbers(@Args('numbers') array: string):Promise<number[]> {
+    return await this.numberService.addNumbers(array);
   }
 
   @Query(returns => [Number])

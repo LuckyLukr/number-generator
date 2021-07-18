@@ -15,25 +15,34 @@ export class NumberService {
         return `number ${newNumber.value} added!`;
     }
 
-    async addNumbers() {
+    async addNumbers(newArray:string) {
         const existingNumbers = await this.numbersRepository.find();
+        const strNumbers = newArray;
+        const parsedNumbers = strNumbers.split(',').map(parseFloat);
 
-        function generateUniqueNumber(existingNumbers:Num[]) {
-            const newNumber = Math.floor(Math.random() * 10000);
+        function generateUniqueNumber() {
+            const newNumber = Math.floor(Math.random() * 10_000);
           if (existingNumbers.find((e:Num) => e.value === newNumber)) {
-              return generateUniqueNumber(existingNumbers);
+              return generateUniqueNumber();
           }
           return newNumber;
         }
 
-        const newNumbers = [
-            {value: generateUniqueNumber(existingNumbers)}, 
-            {value: generateUniqueNumber(existingNumbers)},
-            {value: generateUniqueNumber(existingNumbers)}
-        ];
+        function removeDuplicateNumbers() {
+            const updatedNumbers = [];
+            parsedNumbers.find((e:number) => {
+               if( existingNumbers.find((i:Num) => e === i.value) ) {
+                    e = generateUniqueNumber();
+                    updatedNumbers.push({value: e});
+               } else {
+                    updatedNumbers.push({value: e});
+               }
+            })
+            return updatedNumbers;
+        }
 
-        await this.numbersRepository.insert(newNumbers);
-        return newNumbers.map((e:Num) => e.value);
+        await this.numbersRepository.insert(removeDuplicateNumbers());
+        return removeDuplicateNumbers().map((e:Num) => e.value);
     }
 
     async sortNumbers(condition:string) {
