@@ -1,6 +1,7 @@
-import { Injectable, ForbiddenException } from "@nestjs/common";
+import { Injectable, HttpException, HttpStatus } from "@nestjs/common";
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { NewNumbersInput } from "./dto/new-numbers-input";
 import { Num } from './number.entity';
 
 @Injectable()
@@ -15,10 +16,9 @@ export class NumberService {
         return `number ${newNumber.value} added!`;
     }
 
-    async addNumbers(newArray:string) {
+    async addNumbers(newArray:NewNumbersInput) {
         const existingNumbers = await this.numbersRepository.find();
-        const strNumbers = newArray;
-        const parsedNumbers = strNumbers.split(',').map(parseFloat);
+        const floatNumbers = newArray.array;
 
         function generateUniqueNumber() {
             const newNumber = Math.floor(Math.random() * 10_000);
@@ -30,8 +30,8 @@ export class NumberService {
 
         function removeDuplicateNumbers() {
             const updatedNumbers = [];
-            parsedNumbers.find((e:number) => {
-               if( existingNumbers.find((i:Num) => e === i.value) ) {
+            floatNumbers.forEach((e:number) => {
+               if( existingNumbers.find((i:Num) => e === i.value || e === e) ) {
                     e = generateUniqueNumber();
                     updatedNumbers.push({value: e});
                } else {
@@ -53,7 +53,8 @@ export class NumberService {
         } else if (condition === '>') {
             return floats.sort((a, b) => b - a);
         } else {
-            return
+            return new HttpException({ status: HttpStatus.FORBIDDEN, error: 'USE "<" OR ">" SYMBOLS FOR SORTING NUMBERS.'
+                }, HttpStatus.FORBIDDEN);
         }
     }
 

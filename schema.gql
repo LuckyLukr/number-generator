@@ -7,5 +7,9 @@ type Query {
 }
 
 type Mutation {
-  addNumbers(numbers: String!): [Float!]!
+  addNumbers(numbers: NewNumbersInput!): [Float!]!
+}
+
+input NewNumbersInput {
+  array: [Float!]!
 }

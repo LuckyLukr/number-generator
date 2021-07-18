@@ -24,7 +24,8 @@
 
 ## Description
 
-Unique random number generator.
+### UNIQUE RANDOM NUMBER GENERATOR.
+
 
 ## Installation
 
@@ -45,6 +46,42 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## Using App
+
+# Generate random number
+
+Open http://localhost:3000/numbers from generate random number.
+
+# Sort and overview all numbers in database
+
+http://localhost:3000/graphql from graphQL Playground.
+
+For sorting numbers use graphQL query in playground.
+For sorting from highest number use  >
+For sorting from lowest number use   <
+
+  query{
+    sortNumbers(sort: "<")
+  }
+
+
+# Mutate
+
+To mutate (insert) numbers in array into database use mutation:
+
+mutation{
+  addNumbers(
+    numbers:{
+      array: [1,2,3,4,5]
+    }
+  )
+}
+
+# Delete
+
+Use http://localhost:3000/numbers URI with http DELETE request to delete all data in database.
+
+
 ## Test
 
 ```bash
@@ -61,12 +98,6 @@ $ npm run test:cov
 ## Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
 
 ## License
 
