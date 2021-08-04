@@ -9,7 +9,7 @@ import { NumberResolver } from "./number.resolver";
     imports: [TypeOrmModule.forFeature([Num])],
     controllers: [NumberController],
     providers: [
-        NumberService, 
+        NumberService,
         NumberResolver,
     ],
     exports: [NumberService]

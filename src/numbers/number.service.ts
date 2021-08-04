@@ -12,50 +12,31 @@ export class NumberService {
       ) {}
 
     async generateNumber() {
-        const newNumber = await this.numbersRepository.save({value: Math.floor(Math.random() * 10_000)});
+        const newNumber = await this.numbersRepository.save({value: Math.floor(Math.random() * 10_000_000)});
         return `number ${newNumber.value} added!`;
     }
 
     async addNumbers(newArray:NewNumbersInput) {
-        const existingNumbers = await this.numbersRepository.find();
-        const floatNumbers = newArray.array;
-
-        function generateUniqueNumber() {
-            const newNumber = Math.floor(Math.random() * 10_000);
-          if (existingNumbers.find((e:Num) => e.value === newNumber)) {
-              return generateUniqueNumber();
-          }
-          return newNumber;
-        }
-
-        function removeDuplicateNumbers() {
-            const updatedNumbers = [];
-            floatNumbers.forEach((e:number) => {
-               if( existingNumbers.find((i:Num) => e === i.value || e === e) ) {
-                    e = generateUniqueNumber();
-                    updatedNumbers.push({value: e});
-               } else {
-                    updatedNumbers.push({value: e});
-               }
-            })
-            return updatedNumbers;
-        }
-
-        await this.numbersRepository.insert(removeDuplicateNumbers());
-        return removeDuplicateNumbers().map((e:Num) => e.value);
+        await this.numbersRepository.save(newArray.array.map( e => {return {value: e}}));
+        return newArray.array;
     }
 
-    async sortNumbers(condition:string) {
-        const numbers = await this.numbersRepository.find();
-        const floats = numbers.map((e:Num) => e.value)
-        if (condition === '<') {
-            return floats.sort((a, b) => a - b);
-        } else if (condition === '>') {
-            return floats.sort((a, b) => b - a);
+    async sortNumbers(condition: string) {
+        let order:'ASC' | 'DESC';
+
+        if (condition === "<") {
+            order = 'ASC';
+        }else if(condition === ">") {
+            order = 'DESC';
         } else {
-            return new HttpException({ status: HttpStatus.FORBIDDEN, error: 'USE "<" OR ">" SYMBOLS FOR SORTING NUMBERS.'
-                }, HttpStatus.FORBIDDEN);
+            return new HttpException(
+                    { status: HttpStatus.FORBIDDEN, error: 'USE "<" OR ">" SYMBOLS FOR SORTING NUMBERS.'}
+                    , HttpStatus.FORBIDDEN
+                );
         }
+
+        const sort = await this.numbersRepository.createQueryBuilder("num").orderBy("value", order).getMany();
+        return sort.map( e => e.value);
     }
 
     async deleteNumbers() {

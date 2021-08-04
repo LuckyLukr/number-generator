@@ -14,7 +14,8 @@ export class NumberResolver {
   }
 
   @Query(returns => [Number])
-  async sortNumbers(@Args('sort') condition: string): Promise<number[] | HttpException> {
+  async sortNumbers(@Args('sort') condition: string) {
     return await this.numberService.sortNumbers(condition);
   }
+
 }
