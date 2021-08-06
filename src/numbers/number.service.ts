@@ -11,16 +11,28 @@ export class NumberService {
         private numbersRepository: Repository<Num>,
       ) {}
 
+    /**
+     * Saves a given number in the database.
+     * If number does not exist in the database then inserts, otherwise updates.
+     */
     async generateNumber() {
         const newNumber = await this.numbersRepository.save({value: Math.floor(Math.random() * 10_000_000)});
         return `number ${newNumber.value} added!`;
     }
 
-    async addNumbers(newArray:NewNumbersInput) {
-        await this.numbersRepository.save(newArray.array.map( e => {return {value: e}}));
-        return newArray.array;
+    /**
+     * Saves all numbers from given array in the database.
+     * If numbers does not exist in the database then inserts, otherwise updates.
+     */
+    async addNumbers(array:NewNumbersInput) {
+        await this.numbersRepository.save(array.array.map( e => {return {value: e}}));
+        return array.array;
     }
 
+    /**
+     * Returns array of numbers that is managed by this repository.
+     * Sets ORDER BY condition in the query builder depending on the given order condition ( < or > ).
+     */
     async sortNumbers(condition: string) {
         let order:'ASC' | 'DESC';
 
@@ -30,7 +42,7 @@ export class NumberService {
             order = 'DESC';
         } else {
             return new HttpException(
-                    { status: HttpStatus.FORBIDDEN, error: 'USE "<" OR ">" SYMBOLS FOR SORTING NUMBERS.'}
+                    { status: HttpStatus.FORBIDDEN, error: 'USE "<" OR ">" SYMBOLS FOR SORTING DATA.'}
                     , HttpStatus.FORBIDDEN
                 );
         }
@@ -39,6 +51,9 @@ export class NumberService {
         return sort.map( e => e.value);
     }
 
+    /**
+     * Clears all the data from the given table/collection (truncates/drops it).
+     */
     async deleteNumbers() {
         await this.numbersRepository.clear();
     }

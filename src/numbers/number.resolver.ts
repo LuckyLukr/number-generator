@@ -9,8 +9,8 @@ export class NumberResolver {
   constructor(private readonly numberService: NumberService) {}
 
   @Mutation(returns => [Number])
-  async addNumbers(@Args('numbers') newData: NewNumbersInput):Promise<number[]> {
-    return await this.numberService.addNumbers(newData);
+  async addNumbers(@Args('numbers') array: NewNumbersInput):Promise<number[]> {
+    return await this.numberService.addNumbers(array);
   }
 
   @Query(returns => [Number])
